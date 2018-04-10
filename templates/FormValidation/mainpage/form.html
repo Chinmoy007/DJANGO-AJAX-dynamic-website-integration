@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Responsive Sticky Navbar</title>
+   
+	
+	{%load staticfiles%}
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/FormValidation/style.css'%}">
+
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <script type="text/javascript" src="formValidationActual.js"></script>  -->
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+</head>
+<body>
+	
+	<div class="wrapper">
+		<header>
+			<nav>
+				<div class = "menu-icon">
+					<i class = "fa fa-bars fa-2x"></i>
+				</div>
+
+				<!-- menu logo  -->
+				<div class="logo">
+					BYTE PRO
+				</div>
+				<!-- menu item -->
+				<div class="menu">
+					<ul>
+						<li><a href="#loginSection">Log In</a></li>
+						<li><a href="#signupSection">Sign Up</a></li>
+					</ul>
+				</div>
+			</nav>
+		</header>
+		<!-- login section -->
+		<a name="loginSection">
+			<div class = "loginForm">
+				<form method = "post" action="/login/">
+					
+					{% csrf_token %}
+					<label for="Email" class = "label">Email</label>
+					<br />
+					<input type="text" name="email" id="emailLG" placeholder="Enter Your Email" onblur required  /> 
+					<p id="emailFailLG" style="color: red; font-family: Century Gothic; font-size: 10px"></p>
+					
+					<br>
+					
+					<label for="Password" class = "label">Password</label><br />
+					<input type="password" name="password" id="passwordLG" placeholder="Enter Your Password" required />
+					<p id="passwdFailLG" style="color: red; font-family: Century Gothic; font-size: 10px"></p>
+					
+					<br>
+					<br>
+					<a href="#loginSection"><input type="submit" value="LOG IN" class="button" id = "btn" onclick="login()" /></a>
+					
+				</form>
+			</div>
+		</a>
+
+		<!-- signup section -->
+		<a name="signupSection">
+			  <div class="signupForm" >
+			    	<form method = "post" action="/signup/">
+			    		{% csrf_token %}
+						<label for="Name" class = "label" >Name</label><br />
+				       	<input type="text" name="name" id="nameSU" placeholder="Enter Your Name" required onblur = "nametest()"/>
+				       	<p id="nameFailSU" style="color: red; font-family: Century Gothic; font-size: 10px"></p>
+				        
+				       	<br>
+				       
+				       	<label for="Password" class = "label">Password</label><br />
+				       	<input type="password" name="password" id="passwordSU" placeholder="Enter Your Password"   required />
+				       	<p id="passwordFailSU" style="color: red; font-family: Century Gothic; font-size: 10px"></p>
+				       
+				       	<br>
+				       
+				       	<label for="Email" class = "label">Email</label><br />
+				       	<input type="text" name="email" id="emailSU" placeholder="Enter Your Email" required onblur />
+				       	<p id="emailFailSU" style="color: red; font-family: Century Gothic; font-size: 10px"></p>
+				       
+				       	<br>
+				       	<br>
+				       
+				       	<a href="#signupSection"><input type="submit" value="SIGN UP" class="button"  id="signupbtn" onclick="signup()"/></a>       
+			    	</form>
+			
+			</div>
+		</a>
+
+		
+
+	</div>
+
+	{% block javascript %}
+
+	<script type="text/javascript">
+
+		// ajax email validation
+		$("#emailSU").change(function () {
+		    var email = $(this).val();
+		    $.ajax({
+		      	url: '/ajax/email/',
+		      	data: {
+		        	'email': email
+		     	},
+		      	dataType: 'json',
+		      	success: function (data) {
+		        	if (data.is_taken) {
+		          		document.getElementById('emailFailSU').innerHTML = data.is_taken
+		        	}
+		     	}
+			});      
+
+		            
+		});
+		function refresh() {
+		    $.ajax({
+		        url: '/ajax/randomnum',
+		        success: function(data) {
+		            
+		            document.getElementById("btn").value = data.num; 
+		            
+		        }
+		    });
+		}
+
+		$(function(){
+		    setInterval(refresh, 1000);
+		});
+
+		////////??
+		// for parallax effect and responsive view
+
+
+		$(document).ready(function() {
+      		$(".menu-icon").on("click", function() {
+            	$("nav ul").toggleClass("showing");
+      		});
+		});
+
+// Scrolling Effect
+
+		$(window).on("scroll", function() {
+      		if($(window).scrollTop()) {
+            	$('nav').addClass('black');
+      		}
+
+      		else {
+            	$('nav').removeClass('black');
+      		}
+		})
+    </script>
+    {% endblock %}
+</body>
+
+</html>
