@@ -1,12 +1,11 @@
 from django.shortcuts import render
-# hash 
-from passlib.hash import pbkdf2_sha256
-
 from FORMVALIDATION.models import User
 # for httpResponse
 from django.http import HttpResponse
 # jason response
 from django.http import JsonResponse
+
+from . import models
 
 def show_form(request):
 	return render(request, 'FormValidation/mainpage/form.html') 
@@ -34,14 +33,13 @@ def signup(request):
 		email = request.POST['email']
 		password = request.POST['password']
 
-
-
 		return HttpResponse(name, email, password)
 
 def validate_email(request):
 	email = request.GET.get('email', None)
+	is_taken = User.objects.filter(email = email).count()>0
 	data = {
-		'is_taken': "FUCK YOU"
+		'is_taken': is_taken
 	}
 	return JsonResponse(data)
 
